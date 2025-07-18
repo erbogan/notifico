@@ -40,14 +40,11 @@
         weather: { temp: null, desc: null, icon: null, city: 'Berlin' },
         loading: true,
         async fetchData() {
-            // Währungen
             const res = await fetch('https://api.frankfurter.app/latest?from=EUR&to=USD,TRY');
             const data = await res.json();
             this.kurse.eur = 1;
             this.kurse.usd = data.rates.USD;
-            // Gold (ungefähr, da kein kostenloses API, Platzhalter)
             this.kurse.gold = 2523;
-            // Bitcoin (Coingecko API)
             try {
                 const btcRes = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=eur');
                 const btcData = await btcRes.json();
@@ -55,7 +52,6 @@
             } catch (e) {
                 this.kurse.btc = null;
             }
-            // Wetter (Open-Meteo, keine API-Key nötig)
             try {
                 const weatherRes = await fetch('https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current_weather=true');
                 const weatherData = await weatherRes.json();
@@ -76,7 +72,7 @@
     x-init="fetchData()"
     @keydown.escape="profileOpen = false"
     :class="{ 'dark': darkMode }"
-    class="font-sans bg-white text-primary dark:bg-primary dark:text-white min-h-screen antialiased transition-colors duration-300"
+    class="font-sans bg-white text-primary dark:bg-primary dark:text-white min-h-screen antialiased transition-colors duration-300 flex flex-col"
 >
 <!-- Topbar -->
 <header class="flex items-center justify-between h-16 px-4 lg:px-10 bg-white border-b border-gray-200 dark:bg-navbar dark:border-gray-800 shadow-sm z-30 transition-all duration-300">
@@ -160,8 +156,7 @@
     </div>
 </header>
 
-<div class="flex flex-1 min-h-0 relative">
-
+<div class="flex flex-1 min-h-0 relative w-full">
     <!-- Sidebar -->
     <aside
         x-cloak
@@ -223,105 +218,83 @@
 
     <!-- Main Content -->
     <main class="flex-1 flex flex-col items-center justify-start py-10 px-4 md:px-10 bg-gray-50 dark:bg-primary transition-all">
-        <!-- Dashboard Statistiken -->
-        <section class="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+        <!-- Orta kısımda İstatistik Kartları -->
+        <section class="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
             <!-- Dollar -->
-            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-6 flex flex-col items-center">
+            <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 flex flex-col items-center">
                 <div class="flex items-center gap-2">
-                    <span class="text-3xl font-black text-green-500">$</span>
-                    <div class="text-2xl font-bold text-gray-900 dark:text-white">US-Dollar</div>
+                    <span class="text-2xl font-black text-green-500">$</span>
+                    <div class="text-lg font-bold text-gray-900 dark:text-white">US-Dollar</div>
                 </div>
-                <div class="text-2xl font-bold mt-2 text-gray-800 dark:text-gray-100" x-text="loading ? '...' : kurse.usd ? kurse.usd.toFixed(2) : 'Fehler'"></div>
-                <div class="flex items-center mt-1 text-sm">
+                <div class="text-lg font-bold mt-2 text-gray-800 dark:text-gray-100" x-text="loading ? '...' : kurse.usd ? kurse.usd.toFixed(2) : 'Fehler'"></div>
+                <div class="flex items-center mt-1 text-xs">
                     <span class="text-green-500">Aktuell</span>
                     <span class="ml-2 text-gray-400">EUR / USD</span>
                 </div>
             </div>
             <!-- Euro -->
-            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-6 flex flex-col items-center">
+            <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 flex flex-col items-center">
                 <div class="flex items-center gap-2">
-                    <span class="text-3xl font-black text-indigo-500">€</span>
-                    <div class="text-2xl font-bold text-gray-900 dark:text-white">Euro</div>
+                    <span class="text-2xl font-black text-indigo-500">€</span>
+                    <div class="text-lg font-bold text-gray-900 dark:text-white">Euro</div>
                 </div>
-                <div class="text-2xl font-bold mt-2 text-gray-800 dark:text-gray-100" x-text="loading ? '...' : kurse.eur ? kurse.eur.toFixed(2) : 'Fehler'"></div>
-                <div class="flex items-center mt-1 text-sm">
+                <div class="text-lg font-bold mt-2 text-gray-800 dark:text-gray-100" x-text="loading ? '...' : kurse.eur ? kurse.eur.toFixed(2) : 'Fehler'"></div>
+                <div class="flex items-center mt-1 text-xs">
                     <span class="text-green-500">Basis</span>
                     <span class="ml-2 text-gray-400">EUR</span>
                 </div>
             </div>
             <!-- Gold -->
-            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-6 flex flex-col items-center">
+            <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 flex flex-col items-center">
                 <div class="flex items-center gap-2">
-                    <svg class="w-7 h-7 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
-                    <div class="text-2xl font-bold text-gray-900 dark:text-white">Gold (g)</div>
+                    <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+                    <div class="text-lg font-bold text-gray-900 dark:text-white">Gold (g)</div>
                 </div>
-                <div class="text-2xl font-bold mt-2 text-gray-800 dark:text-gray-100" x-text="loading ? '...' : kurse.gold ? kurse.gold + ' TRY' : 'N/A'"></div>
-                <div class="flex items-center mt-1 text-sm">
+                <div class="text-lg font-bold mt-2 text-gray-800 dark:text-gray-100" x-text="loading ? '...' : kurse.gold ? kurse.gold + ' TRY' : 'N/A'"></div>
+                <div class="flex items-center mt-1 text-xs">
                     <span class="text-yellow-500">Ungefähre Angabe</span>
                 </div>
             </div>
             <!-- Wetter -->
-            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-6 flex flex-col items-center">
+            <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 flex flex-col items-center">
                 <div class="flex items-center gap-2">
-                    <span class="text-3xl" x-text="weather.icon || '🌤️'"></span>
-                    <div class="text-2xl font-bold text-gray-900 dark:text-white" x-text="weather.city"></div>
+                    <span class="text-2xl" x-text="weather.icon || '🌤️'"></span>
+                    <div class="text-lg font-bold text-gray-900 dark:text-white" x-text="weather.city"></div>
                 </div>
-                <div class="text-2xl font-bold mt-2 text-gray-800 dark:text-gray-100">
+                <div class="text-lg font-bold mt-2 text-gray-800 dark:text-gray-100">
                     <span x-text="loading ? '...' : weather.temp ? (weather.temp + '°C') : 'N/A'"></span>
                 </div>
-                <div class="flex items-center mt-1 text-sm">
+                <div class="flex items-center mt-1 text-xs">
                     <span class="text-blue-500" x-text="weather.desc || '-'"></span>
                 </div>
             </div>
         </section>
-        <!-- Trends und Nachrichten -->
-        <section class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-6">
-                <div class="flex items-center gap-2 mb-4">
-                    <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round"
-                                                   d="M3 17l6-6 4 4 8-8"/></svg>
-                    <h2 class="text-lg font-bold text-gray-800 dark:text-white">Finanzielle Trends</h2>
-                </div>
-                <ul class="space-y-2">
-                    <li class="flex justify-between text-sm">
-                        <span class="font-medium text-gray-700 dark:text-gray-200">EUR/USD</span>
-                        <span class="font-semibold text-green-500" x-text="loading ? '...' : kurse.usd ? kurse.usd.toFixed(2) : 'Fehler'"></span>
-                    </li>
-                    <li class="flex justify-between text-sm">
-                        <span class="font-medium text-gray-700 dark:text-gray-200">Bitcoin (EUR)</span>
-                        <span class="font-semibold text-orange-400" x-text="loading ? '...' : kurse.btc ? kurse.btc.toLocaleString('de-DE')+' €' : 'N/A'"></span>
-                    </li>
-                    <li class="flex justify-between text-sm">
-                        <span class="font-medium text-gray-700 dark:text-gray-200">Gold (1g)</span>
-                        <span class="font-semibold text-yellow-400" x-text="loading ? '...' : kurse.gold ? kurse.gold + ' TRY' : 'N/A'"></span>
-                    </li>
-                </ul>
-            </div>
-            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-6">
-                <div class="flex items-center gap-2 mb-4">
-                    <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" stroke-width="2"
-                         viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M16 12l-4-4-4 4"/></svg>
-                    <h2 class="text-lg font-bold text-gray-800 dark:text-white">Aktuelle Schlagzeilen</h2>
-                </div>
-                <ul class="space-y-2">
-                    <li class="flex items-center text-sm gap-2">
-                        <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
-                        <span class="text-gray-700 dark:text-gray-200">EZB-Zinsentscheid heute</span>
-                    </li>
-                    <li class="flex items-center text-sm gap-2">
-                        <span class="w-2 h-2 bg-yellow-400 rounded-full"></span>
-                        <span class="text-gray-700 dark:text-gray-200">Euro und Dollar auf Rekordhoch</span>
-                    </li>
-                    <li class="flex items-center text-sm gap-2">
-                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                        <span class="text-gray-700 dark:text-gray-200">Goldpreis weiter im Aufwärtstrend</span>
-                    </li>
-                </ul>
-            </div>
-        </section>
+        <!-- Diğer içerikler (trends, haberler vs.) ... aşağıya bırakılabilir ... -->
     </main>
 </div>
+
+<!-- Footer: Daha sade, dar, soft -->
+<footer class="w-full border-t border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-navbar/80 backdrop-blur-sm mt-auto">
+    <div class="max-w-3xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+                <span class="inline-block p-1 rounded-full bg-accent/20">
+                    <svg class="w-5 h-5 text-accent dark:text-white" fill="none" stroke="currentColor" stroke-width="2"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M12 4v16m8-8H4" />
+                    </svg>
+                </span>
+            <span class="font-bold text-base text-primary dark:text-white">erbogan</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-4 text-xs text-gray-500 dark:text-gray-300">
+            <a href="https://github.com/erbogan" target="_blank" class="hover:text-accent dark:hover:text-white transition">GitHub</a>
+            <a href="mailto:erbogan@protonmail.com" class="hover:text-accent dark:hover:text-white transition">E-Mail</a>
+        </div>
+        <div class="text-xs text-gray-400 dark:text-gray-500 text-center sm:text-right">
+            © {{ now()->year }} erbogan.
+        </div>
+    </div>
+</footer>
 </body>
 <script src="//unpkg.com/alpinejs" defer></script>
 </html>
