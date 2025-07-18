@@ -15,7 +15,7 @@ return [
     'failed' => 'Diese Anmeldedaten stimmen nicht mit unseren Unterlagen überein.',
     'password_reset_success' => 'Passwort erfolgreich zurückgesetzt!',
     'password_reset_success_description' => 'Sie können sich jetzt mit Ihrem neuen Passwort anmelden.',
-    'back_to_login' => 'Zur Anmeldung zurückkehren',
+    'back_to_home' => 'Zur Anmeldung zurückkehren',
     'password_confirm' => 'Passwort bestätigen',
     'reset_password_button' => 'Passwort zurücksetzen',
     'reset_success_title' => 'Passwort erfolgreich zurückgesetzt',
